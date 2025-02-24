@@ -69,7 +69,7 @@
                 <p class="date">{{ currentDayHeader }}</p>
                 <div class="temp-display">
                   <span class="temp-number">{{ Math.round(currentWeatherDetails.temperature) }}°</span>
-                  <span class="temp-icon" v-html="getTempIcon(currentWeatherDetails.temperature)"></span>
+                  <span class="temp-icon" v-html="getTempIcon(currentWeatherDetails.temperature, currentWeatherDetails.condition)"></span>
                 </div>
                 <p class="condition">{{ currentWeatherDetails.condition }}</p>
               </div>
@@ -81,9 +81,9 @@
                 <p class="humidity">Humidity: {{ currentWeatherDetails.humidity }}%</p>
                 <p class="uv-index">UV Index: {{ currentWeatherDetails.uv_index }}</p>
                 <p class="sun-times">
-                  <img src="/Users/brandon/Documents/Resume_Project/Travel_Companion/Frontend/TravelCompanion_Frontend/src/assets/Pictures/Sunrise.png" alt="Sunrise" class="sun-icon sunrise-icon" />
+                  <img src="/Users/brandon/Documents/Resume_Project/Travel_Companion/Frontend/src/assets/Pictures/Sunrise.png" alt="Sunrise" class="sun-icon sunrise-icon" />
                   {{ formatSunTime(currentWeatherDetails.sunrise) }} |
-                  <img src="/Users/brandon/Documents/Resume_Project/Travel_Companion/Frontend/TravelCompanion_Frontend/src/assets/Pictures/Sunset.png" alt="Sunset" class="sun-icon sunset-icon" />
+                  <img src="/Users/brandon/Documents/Resume_Project/Travel_Companion/Frontend/src/assets/Pictures/Sunset.png" alt="Sunset" class="sun-icon sunset-icon" />
                   {{ formatSunTime(currentWeatherDetails.sunset) }}
                 </p>
               </div>
@@ -96,7 +96,7 @@
                 <div class="hourly-row" v-if="next25Hourly.length">
                   <div class="hourly-forecast" v-for="(hour, index) in next25Hourly" :key="'hourly-' + index">
                     <p class="time">{{ index === 0 ? 'Now' : formatHourlyTime(hour.time) }}</p>
-                    <p class="icon" v-html="getTempIcon(hour.temperature_2m)"></p>
+                    <p class="icon" v-html="getTempIcon(hour.temperature_2m, getWeatherDescription(hour.weathercode))"></p>
                     <p class="temp">{{ Math.round(hour.temperature_2m) }}°F</p>
                   </div>
                 </div>
@@ -108,7 +108,7 @@
                   <div class="daily-forecast" v-for="(day, index) in weatherData.daily.time" :key="'daily-' + index">
                     <!-- Removed the extra day offset -->
                     <p class="day">{{ index === 0 ? 'Today' : formatDailyDate(day) }}</p>
-                    <span class="icon" v-html="getTempIcon(weatherData.daily.temperature_2m_max[index])"></span>
+                    <span class="icon" v-html="getTempIcon(weatherData.daily.temperature_2m_max[index], getWeatherDescription(weatherData.daily.weathercode[index]))"></span>
                     <p class="temp">
                       {{ Math.round(weatherData.daily.temperature_2m_max[index]) }}° 
                       {{ Math.round(weatherData.daily.temperature_2m_min[index]) }}°
@@ -519,7 +519,14 @@ export default {
       const minutes = diffMinutes % 60;
       return `${hours}h ${minutes}m`;
     },
-    getTempIcon(temp) {
+    getTempIcon(temp, condition) {
+      // Convert condition to lowercase for easier comparison
+      const cond = condition ? condition.toLowerCase() : "";
+      // If condition indicates rain-related weather, return the rain emoji
+      if (cond.includes("rain") || cond.includes("drizzle")) {
+        return "🌧️";
+      }
+      // Otherwise, choose based on temperature
       if (temp < 32) return "❄️";
       else if (temp < 60) return "☁️";
       else if (temp < 75) return "⛅";
