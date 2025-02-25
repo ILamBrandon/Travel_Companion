@@ -330,6 +330,7 @@ The backend is built with Django and Django REST Framework, structured to handle
 │   │   └── wsgi.py
 │   ├── manage.py
 
+```
 ---
 # Installation & Setup
 
