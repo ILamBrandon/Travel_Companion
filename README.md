@@ -330,8 +330,173 @@ The backend is built with Django and Django REST Framework, structured to handle
 │   │   └── wsgi.py
 │   ├── manage.py
 
-## Installation & Setup
+---
+# Installation & Setup
 
-### Frontend Setup
+## Frontend Setup
 
-1. **Clone the Repository:**
+### Clone the Repository:
+git clone https://github.com/yourusername/Travel_Companion.git  
+cd Travel_Companion/frontend
+
+### Install Dependencies:
+npm install
+
+### Run the Development Server:
+npm run dev  
+The app will typically run at http://localhost:5173.
+
+### Configuration:
+Ensure that the API base URL in api.ts matches your backend URL (e.g., http://localhost:8000/api/).
+
+# Backend Setup
+
+### Clone the Repository:
+git clone https://github.com/yourusername/Travel_Companion.git  
+cd Travel_Companion/backend
+
+### Set Up Virtual Environment & Install Requirements:
+python -m venv venv  
+source venv/bin/activate   # On Windows use: venv\Scripts\activate  
+pip install -r requirements.txt
+
+### Database Setup:
+Configure your MySQL credentials in a .env file. Ensure that your MySQL server is running and the specified database exists.
+
+### Run Migrations:
+python manage.py migrate
+
+### Create Superuser (Optional):
+python manage.py createsuperuser
+
+### Run the Server:
+python manage.py runserver  
+The API will be available at http://localhost:8000.
+
+# API Documentation
+
+## Itinerary Endpoints
+
+### List Itineraries:
+- **GET /api/itineraries/**  
+  Retrieves all itineraries for the authenticated user.
+
+### Create Itinerary:
+- **POST /api/itineraries/**  
+  Payload includes title, destination details, start/end dates, reason, and planning details.
+
+### Update Itinerary:
+- **PUT /api/itineraries/<id>/**  
+  Update an existing itinerary. Requires the itinerary ID.
+
+### Delete Itinerary:
+- **DELETE /api/itineraries/<id>/**  
+  Deletes the specified itinerary.
+
+## Weather Data
+
+### Fetch Weather:
+- **GET /api/itineraries/weather/?city=<city_name>**  
+  Retrieves current and forecast weather for the specified city.
+
+## Attraction Search
+
+### Search Attractions:
+- **GET /api/itineraries/attractions/**  
+  Query parameters include city, state, country, and optional filters for category and keyword.
+
+## Nearby Cities
+
+### Get Nearby Cities:
+- **GET /api/itineraries/nearby-cities/?city=<city_name>&radius=<miles>**  
+  Returns cities within the given radius based on the input city’s coordinates.
+
+## Authentication & Security
+
+Travel_Companion uses JWT for stateless authentication:
+
+- **Token Storage:**  
+  Tokens are stored in both Pinia (state management) and localStorage.
+
+- **Auto-Refresh:**  
+  Axios interceptors check token expiration and automatically refresh tokens before they expire.
+
+- **Backend Security:**  
+  Endpoints require authentication (except for public routes) and leverage Django REST Framework’s permission classes.
+
+## Usage & Workflow
+
+### User Onboarding:
+- **Registration:**  
+  New users can register using the sign-up form.
+- **Login:**  
+  Existing users log in to access personalized itinerary data.
+
+### Itinerary Creation:
+1. **Step 1:**  
+   Input basic travel information (title, destination, dates, reason).
+2. **Step 2:**  
+   Search for and add attractions/activities. Advanced filters help you refine your search.
+3. **Step 3:**  
+   Plan day-to-day activities using an interactive calendar and drag-and-drop scheduling.
+4. **Step 4:**  
+   Review your itinerary in a timeline view before final submission.
+
+### Calendar & Weather:
+- **Calendar:**  
+  Visualize your trip events in an interactive calendar. Edit events by dragging them or clicking for details.
+- **Weather:**  
+  Check detailed weather forecasts for your trip dates. Use the weather module to add cities to your favorites.
+
+### Managing Itineraries:
+- View, edit, or delete itineraries through the calendar interface.
+- All updates automatically sync with the backend via secure API calls.
+
+## Troubleshooting & FAQs
+
+- **Q: I’m having trouble logging in. What should I do?**  
+  A: Ensure that you have registered an account. Check your network connectivity and verify that the backend server is running. If the issue persists, clear localStorage and try again.
+
+- **Q: My itinerary isn’t saving.**  
+  A: Verify that all required fields are filled out correctly. Check the browser console for errors related to token expiration or network issues.
+
+- **Q: Weather data is not displaying.**  
+  A: Confirm that you are connected to the internet and that the backend can reach the Open-Meteo API. Also, check the city name format.
+
+- **Q: How do I update my account information?**  
+  A: Currently, account details are managed through the registration process. Future updates may include a dedicated profile management page.
+
+## Contributing
+
+We welcome contributions to improve Travel_Companion! To contribute:
+
+### Fork the Repository:
+- Create your own fork on GitHub.
+
+### Create a Feature Branch:
+- Develop your feature or fix on a new branch:  
+  `git checkout -b feature/my-new-feature`
+
+### Commit Changes:
+- Follow best practices and write clear commit messages.
+
+### Open a Pull Request:
+- Submit a pull request detailing your changes and the problem it solves.
+
+### Code Reviews:
+- Your pull request will be reviewed and feedback provided before merging.
+
+## Future Enhancements
+
+- **Mobile Application:**  
+  Develop a native mobile app for iOS and Android for offline planning and notifications.
+- **Social Sharing:**  
+  Allow users to share itineraries and travel plans on social media.
+- **Enhanced Analytics:**  
+  Integrate data analytics to provide insights about popular attractions and travel trends.
+- **User Profile Management:**  
+  Expand user account functionality with profile updates and trip history.
+- **Improved Localization:**  
+  Support multiple languages and localizations for a broader global audience.
+
+---
