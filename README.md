@@ -471,20 +471,20 @@ Travel_Companion uses JWT for stateless authentication:
 
 We welcome contributions to improve Travel_Companion! To contribute:
 
-## Fork the Repository:
+### Fork the Repository:
 - Create your own fork on GitHub.
 
-## Create a Feature Branch:
+### Create a Feature Branch:
 - Develop your feature or fix on a new branch:  
   `git checkout -b feature/my-new-feature`
 
-## Commit Changes:
+### Commit Changes:
 - Follow best practices and write clear commit messages.
 
-## Open a Pull Request:
+### Open a Pull Request:
 - Submit a pull request detailing your changes and the problem it solves.
 
-## Code Reviews:
+### Code Reviews:
 - Your pull request will be reviewed and feedback provided before merging.
 
 # Future Enhancements
