@@ -4,6 +4,9 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
+  corePlugins: {
+    preflight: false,  // This disables Tailwind’s base styles (Preflight)
+  },
   theme: {
     extend: {},
   },
