@@ -109,64 +109,226 @@ Travel_Companion’s architecture is designed around modularity and scalability:
 - **APIs:** Open-Meteo, Nominatim, Overpass API, Google Translate
 
 ### Other
-- **Styling:** CSS with media queries for responsive design
+- **Styling:** Tailwind CSS, CSS with media queries for responsive design
 - **Caching:** In-memory caching for translation results
 
 ---
 
 ## Project Structure
 
-### Frontend
+## Frontend
 
-#### Entry Point & Global Files
-- **`main.ts`:** Initializes the Vue application, sets up Pinia and Vue Router, and loads tokens.
-- **`app.vue`:** Root component that contains the main layout and router view.
-- **`main.css`:** Global CSS for styling and responsive design.
+The frontend is built with Vue.js and is organized for clarity and modularity. It features a clear separation of global files, components, views, utilities, and state management using Pinia.
 
-#### Components & Views
-- **Home Page (`home.vue`):**  
-  The welcome page that introduces the app features.
-- **Authentication (`login.vue` & `register.vue`):**  
-  Forms and UI for user login and account creation.
-- **Calendar (`CalendarView.vue`):**  
-  Interactive calendar with event scheduling, drag-and-drop functionality, and sidebar navigation.
-- **Itinerary Form (`ItineraryForm.vue` and steps `step_1.vue`, `step2.vue`, `step3.vue`, `step4.vue`):**  
-  A guided multi-step process to collect itinerary information, attractions, planning details, and final review.
-- **Weather Interface (`WeatherUI.vue`):**  
-  Provides search functionality for weather data and displays detailed forecast information.
+### Entry Point & Global Files
 
-#### Utilities & Stores
-- **API Module (`api.ts`):**  
-  Configures Axios with token refresh interceptors for secure API communication.
-- **Authentication Store (`auth.ts`):**  
-  Manages authentication state, token persistence, and expiration logic.
+- **main.ts**  
+  Initializes the Vue application, sets up Pinia for state management, configures Vue Router for navigation, and loads any necessary tokens.
 
-### Backend
+- **App.vue**  
+  The root component that holds the main layout and router view.
+
+- **main.css**  
+  Contains global CSS rules for styling and responsive design (including Tailwind CSS for utility-first styling).
+
+### Components & Views
+
+#### LoginRegister.vue
+
+A unified component that manages user authentication by toggling between login and registration modes.
+
+- **Purpose:**  
+  Replaces separate login, register, and home pages to provide a seamless authentication experience.
+
+- **Features & Functionality:**
+  - **Dynamic Form Panel:**  
+    Displays a "Welcome Back" greeting in login mode and a "Create an Account" prompt in registration mode.
+  - **Form Fields & Validation:**  
+    Includes fields for username, email (registration mode only), and password. Validates inputs and displays error messages for incorrect or missing data.
+  - **API Integration:**  
+    On submission, performs an HTTP POST request to the backend endpoints (`users/login/` for login and `users/register/` for registration) using Axios.
+  - **Loading State & Feedback:**  
+    Shows a loading spinner during API calls and provides feedback via SweetAlert2 for success messages. On successful login, tokens are set in the auth store and the user is redirected to the calendar page.
+  - **Mode Toggle:**  
+    Allows users to switch between login and registration modes, resetting fields and errors as needed.
+
+#### Calendar & Sidebar Components
+
+Provides an interactive interface for managing travel itineraries and events.
+
+- **Sidebar:**
+  - **Toggleable Panel:**  
+    Expand or collapse the sidebar to display controls and itinerary summaries.
+  - **Search Functionality:**  
+    Allows users to filter itineraries by title.
+  - **Action Buttons:**  
+    Buttons for creating itineraries and checking weather forecasts.
+  - **Itinerary Summaries:**  
+    Displays a list of itinerary summaries with options for editing or deleting, and clicking a title jumps the calendar view to the itinerary’s start date.
+  - **Footer:**  
+    Displays the current username and a logout button.
+
+- **Calendar Display & Interaction:**
+  - **Vue-Cal Integration:**  
+    Uses Vue-Cal to render various calendar views (month, week, agenda) with drag-and-drop support for events.
+  - **Event Management:**  
+    Supports event creation, immediate addition to the calendar, and detailed event modals with SweetAlert2.
+  - **Time Customization:**  
+    Configured for a time-based view (8 AM to 6 PM) in a 12-hour format with custom time formatting.
+  - **Data Handling & Persistence:**  
+    Events and itineraries are saved to and retrieved from local storage, ensuring data persists between sessions.
+  - **Backend Communication:**  
+    Deleting an itinerary triggers an API call (using Axios) to remove it from both the local interface and the MySQL database.
+
+#### ItineraryForm.vue
+
+A guided, multi-step form for creating or updating a travel itinerary.
+
+- **Overview:**  
+  Utilizes a form wizard divided into four sequential steps, each with its own validation and state management.
+  
+- **Structure & Navigation:**
+  - **Close Button:**  
+    Allows users to exit the form at any time.
+  - **Form Wizard:**  
+    Encapsulates the main content, with “Next” and “Back” buttons fixed at the bottom of the viewport for easy navigation.
+  
+- **Step-by-Step Breakdown:**
+  - **Step 1 – Itinerary Information:**  
+    Collects basic details such as title, city, state, country, start/end dates, and travel reason. An “Other” option reveals an additional input.
+  - **Step 2 – Attractions:**  
+    Enables selection of attractions. Validation ensures at least one attraction is added.
+  - **Step 3 – Plan Activities:**  
+    Provides a drag-and-drop interface for scheduling attractions into a daily timeline with automated conflict detection.
+  - **Step 4 – Review & Submit:**  
+    Summarizes the itinerary details and planned activities. On submission, data is saved to local storage and an API call is made (POST for creation, PUT for updates). The form resets for subsequent uses.
+  
+- **Data Management & Validation:**  
+  - Uses shared state via Vue’s provide/inject mechanism to ensure real-time data updates.
+  - Pre-populates data from local storage in edit mode, then clears stale data.
+  - Validates each step before allowing navigation to the next step.
+
+#### WeatherUI.vue
+
+An integrated weather interface for checking current conditions, forecasts, and managing favorite cities.
+
+- **Overall Layout & Navigation:**
+  - **Sidebar Navigation:**  
+    Includes icons for City Weather, Favorite Cities, and Trip Weather. Hover tooltips and an exit button allow quick navigation back to the calendar.
+  - **Main Content Area:**  
+    Dynamically displays different views based on user selection.
+
+- **City Weather View:**
+  - **Search Interface:**  
+    Provides fields for entering city and country, with automatic capitalization and a loading spinner during API calls.
+  - **Current Weather Display:**  
+    Shows location, current date/time (adjusted via Luxon), temperature with dynamic icons, wind speed, humidity, UV index, and sunrise/sunset times.
+  - **Forecast Sections:**  
+    - **Hourly Forecast:**  
+      Displays the next 25 hours in a scrollable horizontal row.
+    - **10-Day Forecast:**  
+      Provides daily high/low temperatures with concise day labels.
+
+- **Favorites View:**
+  - Allows searching and managing saved favorite cities, displaying key weather details for each.
+  - Interaction includes loading a favorite city’s weather data or removing it from the list.
+
+- **Trip Weather View:**
+  - Retrieves weather data for upcoming travel events (within the next week), with navigation for different event dates.
+  - Displays detailed event-based weather summaries.
+
+- **Performance Optimization & Data Management:**
+  - Caches trip weather data in local storage to reduce redundant API calls.
+  - Dynamically updates the current time and weather information based on user interactions.
+
+### Utilities & Stores
+
+- **API Module (api.ts):**  
+  Configures Axios with token refresh interceptors for secure backend communication.
+
+- **Authentication Store (auth.ts):**  
+  Manages authentication state, token persistence, and token expiration logic using Pinia.
+
+---
+
+## Backend
+
+The backend is built with Django and Django REST Framework, structured to handle core application logic, user management, and external API integrations.
+
+### Key Modules & Files
 
 #### Views & Endpoints
-- **ItineraryViewSet (`main/views.py`):**  
-  Exposes endpoints for CRUD operations, weather data (`/weather/`), attraction searches (`/attractions/`), and nearby cities (`/nearby-cities/`).
-- **User Management (`users/views.py`):**  
+
+- **ItineraryViewSet (main/views.py):**  
+  Exposes endpoints for CRUD operations on itineraries, as well as endpoints for fetching weather data (`/weather/`), searching attractions (`/attractions/`), and finding nearby cities (`/nearby-cities/`).
+
+- **User Management (users/views.py):**  
   Handles user registration and profile management.
 
 #### Models & Serializers
-- **Itinerary Model (`main/models.py`):**  
-  Represents a travel itinerary with fields for title, destination, dates, reason, and JSON-based planning details.
-- **ItinerarySerializer (`main/serializer.py`):**  
+
+- **Itinerary Model (main/models.py):**  
+  Represents travel itineraries with fields for title, destination, dates, reason, and JSON-based planning details.
+
+- **ItinerarySerializer (main/serializers.py):**  
   Serializes and validates itinerary data.
-- **User & Profile Serializers (`users/serializer.py`):**  
-  Manage user data and registration workflows.
+
+- **User & Profile Serializers (users/serializers.py):**  
+  Manage user data serialization and registration workflows.
 
 #### External API Integration & Concurrency
-- Utilizes both synchronous (`requests`) and asynchronous (`aiohttp`) HTTP calls to communicate with external APIs such as Nominatim, Overpass, and Open-Meteo.
-- Implements in-memory caching for translations to improve performance.
+
+- Utilizes both synchronous (requests) and asynchronous (aiohttp) HTTP calls to communicate with external APIs (e.g., Nominatim, Overpass, Open-Meteo).
+- Implements in-memory caching for translation results to improve performance.
 
 #### Settings & Configuration
-- **CORS:** Configured to allow the frontend to communicate with the backend.
-- **Environment Variables:** Used for sensitive data and database credentials.
-- **JWT Settings:** Configured in `travelcompanion/settings.py` for token expiration and refresh.
+
+- Configured for CORS to enable secure communication between the frontend and backend.
+- Uses environment variables to manage sensitive data and database credentials.
+- JWT settings in `travelcompanion/settings.py` handle token expiration and refresh for secure user authentication.
 
 ---
+
+## Project Directory Structure
+
+```plaintext
+├── frontend
+│   ├── src
+│   │   ├── assets
+│   │   ├── components
+│   │   │   ├── CalendarView.vue
+│   │   │   ├── ItineraryForm
+│   │   │   │   ├── Step1_ItineraryInfo.vue
+│   │   │   │   ├── Step2_Activities.vue
+│   │   │   │   ├── Step3_PlanActivities.vue
+│   │   │   │   └── Step4_Review.vue
+│   │   │   ├── LoginRegister.vue
+│   │   │   └── WeatherUI.vue
+│   │   ├── router
+│   │   │   └── index.ts
+│   │   ├── stores
+│   │   │   └── auth.ts
+│   │   ├── App.vue
+│   │   └── main.ts
+│   ├── tailwind.config.js
+│   └── package.json
+│
+├── backend
+│   ├── main
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   └── admin.py
+│   ├── users
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   └── admin.py
+│   ├── travelcompanion
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   ├── manage.py
 
 ## Installation & Setup
 
