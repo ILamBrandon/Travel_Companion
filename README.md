@@ -1,6 +1,6 @@
 # Travel_Companion
 
-Travel_Companion is a full-featured travel planning and itinerary management application designed to simplify your travel experience. Whether you’re planning a vacation, a business trip, or a family reunion, Travel_Companion provides a one-stop solution to organize your journey—from booking and scheduling to weather updates and attraction searches.
+Travel_Companion is a full-featured travel planning and itinerary management application designed to simplify your travel experience. Whether you’re planning a vacation, a business trip, or a family reunion, Travel Companion provides a one-stop solution to organize your journey—from scheduling to weather updates and attraction searches.
 
 ---
 
