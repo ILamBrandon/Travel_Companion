@@ -22,7 +22,6 @@ Travel_Companion is a full-featured travel planning and itinerary management app
 - [Troubleshooting & FAQs](#troubleshooting--faqs)
 - [Contributing](#contributing)
 - [Future Enhancements](#future-enhancements)
-- [License](#license)
 
 ---
 
@@ -374,6 +373,8 @@ python manage.py createsuperuser
 python manage.py runserver  
 The API will be available at http://localhost:8000.
 
+---
+
 # API Documentation
 
 ## Itinerary Endpoints
@@ -424,16 +425,18 @@ Travel_Companion uses JWT for stateless authentication:
 
 - **Backend Security:**  
   Endpoints require authentication (except for public routes) and leverage Django REST Framework’s permission classes.
+  
+---
 
 # Usage & Workflow
 
-## User Onboarding:
+### User Onboarding:
 - **Registration:**  
   New users can register using the sign-up form.
 - **Login:**  
   Existing users log in to access personalized itinerary data.
 
-## Itinerary Creation:
+### Itinerary Creation:
 1. **Step 1:**  
    Input basic travel information (title, destination, dates, reason).
 2. **Step 2:**  
@@ -443,15 +446,17 @@ Travel_Companion uses JWT for stateless authentication:
 4. **Step 4:**  
    Review your itinerary in a timeline view before final submission.
 
-## Calendar & Weather:
+### Calendar & Weather:
 - **Calendar:**  
   Visualize your trip events in an interactive calendar. Edit events by dragging them or clicking for details.
 - **Weather:**  
   Check detailed weather forecasts for your trip dates. Use the weather module to add cities to your favorites.
 
-## Managing Itineraries:
+### Managing Itineraries:
 - View, edit, or delete itineraries through the calendar interface.
 - All updates automatically sync with the backend via secure API calls.
+- 
+---
 
 # Troubleshooting & FAQs
 
@@ -466,7 +471,9 @@ Travel_Companion uses JWT for stateless authentication:
 
 - **Q: How do I update my account information?**  
   A: Currently, account details are managed through the registration process. Future updates may include a dedicated profile management page.
-
+  
+  ---
+  
 # Contributing
 
 We welcome contributions to improve Travel_Companion! To contribute:
@@ -486,6 +493,8 @@ We welcome contributions to improve Travel_Companion! To contribute:
 
 ### Code Reviews:
 - Your pull request will be reviewed and feedback provided before merging.
+
+---
 
 # Future Enhancements
 
